@@ -20,7 +20,7 @@ include('backend/insert.php');
             <i class="fas fa-mail-bulk"></i>
         </div>
         <form method="post">
-            <h1>Contact Us</h1>
+            <h1>Add Promoter</h1>
             <div class="info">
                 <input class="fname" type="text" name="full_name" placeholder="Full name">
                 <input type="text" name="remark" placeholder="Remark">
