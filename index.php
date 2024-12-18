@@ -21,5 +21,5 @@ if ($resultIp->num_rows == 0) {
 }
 
 // Redirect to the specified website
-header("Location: https://abhpartners.com/");
+header("Location: https://t.me/waliyabet");
 exit();
