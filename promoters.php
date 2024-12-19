@@ -38,6 +38,35 @@ include("connect.php");
             color: #fff;
             /* Set a white text color for better visibility */
         }
+
+        .sel_del {
+            margin-left: auto;
+            max-width: 300px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Style the "Select All" checkbox */
+        .sel_del #select-all {
+            margin-bottom: 10px;
+        }
+
+        .sel_del .btn-delete-multiple {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .sel_del .btn-delete-multiple:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 
@@ -52,9 +81,16 @@ include("connect.php");
         $result = mysqli_query($con, "SELECT * FROM promoter");
         ?>
         <section class="table-responsive">
+            <div class="sel_del">
+                <input type="checkbox" id="select-all">
+                <label for="select-all">Select All</label>
+                <br>
+                <button id="deleteSelected" class="btn btn-danger">Delete Selected</button>
+            </div>
             <table class="table table-striped table-bordered mydatatable" id="mydatatable">
                 <thead class="thead-dark">
                     <tr>
+                        <th scope="col">box</th>
                         <th>Row No.</th>
                         <th>Referral ID</th>
                         <th>First Name</th>
@@ -70,6 +106,7 @@ include("connect.php");
                     $rowNumber = 1; // Initialize row number
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
+                        echo "<td><input type='checkbox' class='delete-checkbox' name='selected_records[]' value='" . $row['promoter_id'] . "'></td>";
                         echo "<td>" . $rowNumber . "</td>";
                         echo "<td>" . $row['promoter_id'] . "</td>";
                         echo "<td>" . $row['first_name'] . "</td>";
@@ -78,10 +115,11 @@ include("connect.php");
                         echo "<td>" . $row['email'] . "</td>";
                         echo "<td>" . $row['phone'] . "</td>";
                         echo "<td>
-                        <a class='btn btn-success' href='backend/edit.php?promoter_id=$row[promoter_id]'>Edit</a>
-                        <button class='btn btn-danger' onclick='confirmDelete($row[promoter_id])'>Delete</button>
-                      </td>";
+        <a class='btn btn-success' href='backend/edit.php?promoter_id=" . $row['promoter_id'] . "'>Edit</a>
+        <button class='btn btn-danger' onclick='confirmDelete(" . $row['promoter_id'] . ")'>Delete</button>
+      </td>";
                         echo "</tr>";
+
                         $rowNumber++; // Increment row number for the next row
                     }
                     ?>
@@ -155,6 +193,58 @@ include("connect.php");
                 }
             });
         }
+
+        document.getElementById('deleteSelected').addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('.delete-checkbox:checked');
+            const selectedIds = Array.from(checkboxes).map(checkbox => checkbox.value);
+
+            if (selectedIds.length > 0) {
+                Swal.fire({
+                    title: 'Are you sure you want to delete the selected records?',
+                    text: 'This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete them!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Send IDs to the server for deletion
+                        fetch('delete.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    ids: selectedIds
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('Deleted!', 'The records have been deleted.', 'success')
+                                        .then(() => location.reload()); // Reload the page
+                                } else {
+                                    Swal.fire('Error!', data.error || 'There was a problem deleting the records.', 'error');
+                                }
+                            });
+                    }
+                });
+            } else {
+                Swal.fire('No Selection', 'Please select at least one record to delete.', 'info');
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Function to handle select all checkbox
+            $("#select-all").click(function() {
+                // Check if the select all checkbox is checked
+                var isChecked = $(this).prop("checked");
+                // Set the checked status of all checkboxes in the table to match the select all checkbox
+                $("input[name='selected_records[]']").prop("checked", isChecked);
+            });
+        });
     </script>
 </body>
 
