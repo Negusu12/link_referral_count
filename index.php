@@ -101,7 +101,7 @@
             if (savedPage) {
                 iframe.src = savedPage; // Load the saved page in iframe
             } else {
-                iframe.src = 'add_promoter.php'; // Default page (optional)
+                iframe.src = 'referral_count.php'; // Default page (optional)
             }
         };
     </script>

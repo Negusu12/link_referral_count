@@ -148,25 +148,31 @@ include('backend/insert.php');
 
 <body>
     <div class="main-block">
-        <form method="post">
+        <form id="promoterForm" method="post" onsubmit="return validateForm()">
             <h1>Add Promoter</h1>
             <div class="info">
                 <label for="first_name">First Name</label>
-                <input type="text" name="first_name">
+                <input type="text" id="first_name" name="first_name" placeholder="Enter first name">
+
                 <label for="middle_name">Middle Name</label>
-                <input type="text" name="middle_name">
+                <input type="text" id="middle_name" name="middle_name" placeholder="Enter middle name">
+
                 <label for="last_name">Last Name</label>
-                <input type="text" name="last_name">
-                <label for="">Phone Number</label>
-                <input type="text" name="phone">
-                <label for="">Email</label>
-                <input type="email" name="email">
+                <input type="text" id="last_name" name="last_name" placeholder="Enter last name">
+
+                <label for="phone">Phone Number</label>
+                <input type="text" id="phone" name="phone" placeholder="Enter phone number">
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter email">
             </div>
             <button type="submit" name="submit">Submit</button>
         </form>
     </div>
 
     <script src="js/sweetalert2.min.js"></script>
+    <script src="js/form_validation.js"></script>
 </body>
+
 
 </html>
