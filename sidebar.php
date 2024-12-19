@@ -82,14 +82,28 @@
     </div>
 
     <div class="main-content">
-        <iframe id="content-frame" src=""></iframe>
+        <!-- Set iframe src to the default saved page or blank -->
+        <iframe id="content-frame"></iframe>
     </div>
 
     <script>
+        // Function to load page in iframe and store the page in localStorage
         function loadPage(event, page) {
             event.preventDefault(); // Prevent default link behavior
             document.getElementById('content-frame').src = page; // Load page in iframe
+            localStorage.setItem('currentPage', page); // Save the current page to localStorage
         }
+
+        // Load the last page from localStorage on page refresh
+        window.onload = function() {
+            const savedPage = localStorage.getItem('currentPage'); // Get the last loaded page from localStorage
+            const iframe = document.getElementById('content-frame');
+            if (savedPage) {
+                iframe.src = savedPage; // Load the saved page in iframe
+            } else {
+                iframe.src = 'add_promoter.php'; // Default page (optional)
+            }
+        };
     </script>
 </body>
 

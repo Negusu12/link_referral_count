@@ -57,8 +57,11 @@ include("connect.php");
                     <tr>
                         <th>Row No.</th>
                         <th>Referral ID</th>
-                        <th>Full Name</th>
-                        <th>Remark</th>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -69,8 +72,11 @@ include("connect.php");
                         echo "<tr>";
                         echo "<td>" . $rowNumber . "</td>";
                         echo "<td>" . $row['promoter_id'] . "</td>";
-                        echo "<td>" . $row['full_name'] . "</td>";
-                        echo "<td>" . $row['remark'] . "</td>";
+                        echo "<td>" . $row['first_name'] . "</td>";
+                        echo "<td>" . $row['middle_name'] . "</td>";
+                        echo "<td>" . $row['last_name'] . "</td>";
+                        echo "<td>" . $row['email'] . "</td>";
+                        echo "<td>" . $row['phone'] . "</td>";
                         echo "<td>
                         <a class='btn btn-success' href='backend/edit.php?promoter_id=$row[promoter_id]'>Edit</a>
                         <button class='btn btn-danger' onclick='confirmDelete($row[promoter_id])'>Delete</button>
@@ -113,8 +119,8 @@ include("connect.php");
                 buttons: ['excel', 'pdf', 'colvis'],
                 pagingType: 'full_numbers',
                 lengthMenu: [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
+                    [25, 50, -1],
+                    [25, 50, "All"]
                 ],
                 responsive: true // Enable responsive design
             });

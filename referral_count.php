@@ -56,7 +56,12 @@ include("connect.php");
                 <thead class="thead-dark">
                     <tr>
                         <th>Row No.</th>
-                        <th>Full Name</th>
+                        <th>Referral ID</th>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                         <th>Total Visit Count</th>
                     </tr>
                 </thead>
@@ -66,7 +71,12 @@ include("connect.php");
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo "<tr>";
                         echo "<td>" . $rowNumber . "</td>"; // Display row number
-                        echo "<td>" . $row['full_name'] . "</td>";
+                        echo "<td>" . $row['promoter_id'] . "</td>";
+                        echo "<td>" . $row['first_name'] . "</td>";
+                        echo "<td>" . $row['middle_name'] . "</td>";
+                        echo "<td>" . $row['last_name'] . "</td>";
+                        echo "<td>" . $row['email'] . "</td>";
+                        echo "<td>" . $row['phone'] . "</td>";
                         echo "<td>" . $row['total_visit_count'] . "</td>";
                         echo "</tr>";
                         $rowNumber++; // Increment row number for the next row
@@ -106,8 +116,8 @@ include("connect.php");
                 buttons: ['excel', 'pdf', 'colvis'],
                 pagingType: 'full_numbers',
                 lengthMenu: [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
+                    [25, 50, -1],
+                    [25, 50, "All"]
                 ],
                 responsive: true // Enable responsive design
             });

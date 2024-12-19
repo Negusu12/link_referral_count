@@ -24,20 +24,26 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
     }
     $row = $result->fetch_assoc();
     $promoter_id = $row["promoter_id"];
-    $full_name = $row["full_name"];
-    $remark = $row["remark"];
+    $first_name = $row["first_name"];
+    $middle_name = $row["middle_name"];
+    $last_name = $row["last_name"];
+    $email = $row["email"];
+    $phone = $row["phone"];
   }
 } else {
   $promoter_id = $_POST["promoter_id"];
-  $full_name = $_POST["full_name"];
-  $remark = $_POST["remark"];
+  $first_name = $_POST["first_name"];
+  $middle_name = $_POST["middle_name"];
+  $last_name = $_POST["last_name"];
+  $email = $_POST["email"];
+  $phone = $_POST["phone"];
 
 
 
   if (empty($error)) {
-    $sql = "UPDATE promoter SET full_name=?, remark=? WHERE promoter_id=?";
+    $sql = "UPDATE promoter SET first_name=?, middle_name=?, last_name=?, email=?, phone=? WHERE promoter_id=?";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param('sss', $full_name, $remark, $promoter_id);
+    $stmt->bind_param('ssssss', $first_name, $middle_name,  $last_name, $email,  $phone, $promoter_id);
     if (!$stmt->execute()) {
       $error = "Error: " . $stmt->error;
     } else {
@@ -171,12 +177,23 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
 
             <div class="form-group">
               <label for="full_name">Full Name:</label>
-              <input class="input100" type="text" name="full_name" value="<?php echo $full_name ?>" required>
+              <input class="input100" type="text" name="first_name" value="<?php echo $first_name ?>" required>
             </div>
-
             <div class="form-group">
-              <label for="Remark">Remark:</label>
-              <input type="text" name="remark" value="<?php echo $remark ?>" required>
+              <label for="full_name">Middle Name:</label>
+              <input class="input100" type="text" name="middle_name" value="<?php echo $middle_name ?>" required>
+            </div>
+            <div class="form-group">
+              <label for="full_name">Last Name:</label>
+              <input class="input100" type="text" name="last_name" value="<?php echo $last_name ?>" required>
+            </div>
+            <div class="form-group">
+              <label for="full_name">email:</label>
+              <input class="input100" type="text" name="email" value="<?php echo $email ?>" required>
+            </div>
+            <div class="form-group">
+              <label for="full_name">Phone:</label>
+              <input class="input100" type="text" name="phone" value="<?php echo $phone ?>" required>
             </div>
 
             <button type="submit">Update</button>
