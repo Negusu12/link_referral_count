@@ -1,6 +1,6 @@
 <?php
 include('connect.php');
-
+include('backend/functions.php');
 if (isset($_POST['submit'])) {
     $first_name = addslashes($_POST['first_name']);
     $middle_name = addslashes($_POST['middle_name']);
@@ -75,4 +75,59 @@ if (isset($_POST['submit'])) {
         }
         </script>";
     }
+}
+
+
+if (isset($_POST['submit_user'])) {
+    $user_name = $_POST['user_name'];
+    $password = $_POST['password'];
+    $role = $_POST['role'];
+
+    if (!empty($user_name) && !empty($password) && !is_numeric($user_name)) {
+        $user_id = random_num(20);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $query = "INSERT INTO users (user_id, user_name, password, role)
+                  VALUES ('$user_id', '$user_name', '$hashed_password', '$role')";
+        $result = mysqli_query($con, $query);
+
+        if ($result) {
+            // Set a success flag in the session
+            session_start();
+            $_SESSION['success'] = true;
+
+            // Redirect to the same page to clear POST data
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        } else {
+            echo "<script>
+                window.onload = function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Please enter valid information!',
+                        showConfirmButton: false,
+                        showDenyButton: true,
+                        denyButtonText: 'OK'
+                    });
+                }
+             </script>";
+        }
+    }
+}
+
+// Check for success message in the session
+session_start();
+if (isset($_SESSION['success']) && $_SESSION['success']) {
+    echo "<script>
+        window.onload = function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'User has been Registered Successfully',
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                timer: 2000
+            });
+        }
+     </script>";
+    // Unset the success flag
+    unset($_SESSION['success']);
 }

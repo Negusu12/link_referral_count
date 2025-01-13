@@ -25,3 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode(['success' => false, 'error' => 'Invalid input']);
     }
 }
+if (isset($_GET["users_d"])) {
+    include('connect.php');
+    $id = $_GET['users_d'];
+    //Delete the line
+    $sql = "DELETE FROM users WHERE id=$id";
+    if ($con->query($sql) === TRUE) {
+        header('location: users_list.php');
+    } else {
+        echo "Error deleting record: " . $con->error;
+    }
+}

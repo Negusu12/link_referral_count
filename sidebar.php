@@ -77,7 +77,7 @@
         <ul>
             <li><a href="add_promoter.php" onclick="loadPage(event, 'add_promoter.php')">Add Promoter</a></li>
             <li><a href="promoters.php" onclick="loadPage(event, 'promoters.php')">Manage Promoters</a></li>
-            <li><a href="about.php" onclick="loadPage(event, 'about.php')">About</a></li>
+            <li><a href="add_user.php" onclick="loadPage(event, 'add_user.php')">Add User</a></li>
         </ul>
     </div>
 

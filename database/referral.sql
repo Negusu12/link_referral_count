@@ -30,8 +30,18 @@ CREATE TABLE `promoter` (
   `phone` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`promoter_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `promoter`
+--
+
+LOCK TABLES `promoter` WRITE;
+/*!40000 ALTER TABLE `promoter` DISABLE KEYS */;
+INSERT INTO `promoter` VALUES (24,'Negusu','Solomon','Wondimu','0912608380','negusu01@gmail.com');
+/*!40000 ALTER TABLE `promoter` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Temporary view structure for view `promoter_count`
@@ -70,6 +80,43 @@ CREATE TABLE `referral_count` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `referral_count`
+--
+
+LOCK TABLES `referral_count` WRITE;
+/*!40000 ALTER TABLE `referral_count` DISABLE KEYS */;
+/*!40000 ALTER TABLE `referral_count` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint DEFAULT NULL,
+  `user_name` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `date` timestamp NULL DEFAULT NULL,
+  `role` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,77197383,'Negusu','$2y$10$MhFPYM9dPqtnEZS.6cijOebDxj48kstWXGGj2OlE2MJM6UCnyijl6',NULL,'1'),(2,5795850732425733,'jo','$2y$10$C7o8aY4GtJhN0qzBNO4ujulkKF8SLxLdkCo4k34lqOrqSkApYF6H2',NULL,'1'),(3,98739,'zerihun','$2y$10$aoSvMIkbHZe3Zsg5I5v.RuHds/x4EYZgEpK15aG9V5yUrmPgNSCaO',NULL,'1'),(4,179214487388922,'zerihun','$2y$10$fG7g2Ldt1mGoJqDMhDYSHuq7LH4.x8SzEPY.bfzgR9TNs1qqHWt9O',NULL,'1'),(5,7665617518925476,'zerihun','$2y$10$S3neXDGfKEK.akkmPILOOe9aUWc6km6ZhFZl.XDR7Ec8IIjktLBuu',NULL,'1'),(6,3840,'zerihun','$2y$10$RizPEgyCm8xAqllmbTI.hu3o07quaSvktea37xw1p6xFH37TWeF6i',NULL,'1'),(7,5407172076387660624,'zerihun','$2y$10$o5iGtM89elLt6p52n5DruO2Y.Uc.18fonvLx7J68regx0AYrkjp5W',NULL,'1'),(8,676705729276522913,'tsi','$2y$10$qMWBpB9EnC3z.7ksITDjReHMXawpZCgPiUNDcpiSpyUfuhfZZ7fx6',NULL,'1'),(9,6730114,'kal','$2y$10$F4NL4GRW7YsozKaB1zUPd.uhlZ7bKYdBF6Al6k1yHxe6.K/EhRB6i',NULL,'1'),(10,162606599,'bruk','$2y$10$/T0N0PSZTqXm/l0BU9bZxueXcNrxFFM2YkzGq1wvkHPhdBDRC0bmi',NULL,'1');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Final view structure for view `promoter_count`
 --
 
@@ -96,4 +143,4 @@ CREATE TABLE `referral_count` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-19  4:55:49
+-- Dump completed on 2025-01-13  8:59:01

@@ -1,3 +1,9 @@
+<?php
+session_start();
+include("connect.php");
+include("backend/functions.php");
+$user_data = check_login($con);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -75,9 +81,17 @@
     <div class="sidebar">
         <h2>Navigation</h2>
         <ul>
-            <li><a href="add_promoter.php" onclick="loadPage(event, 'add_promoter.php')">Add Promoter</a></li>
-            <li><a href="promoters.php" onclick="loadPage(event, 'promoters.php')">Manage Promoters</a></li>
-            <li><a href="referral_count.php" onclick="loadPage(event, 'referral_count.php')">Referral Count</a></li>
+            <?php if (!in_array($user_data['role'], [1])) : ?>
+                <li><a href="add_promoter.php">Add Promoter</a></li>
+            <?php endif; ?>
+            <?php if (in_array($user_data['role'], [1])) : ?>
+                <li><a href="add_promoter.php" onclick="loadPage(event, 'add_promoter.php')">Add Promoter</a></li>
+                <li><a href="promoters.php" onclick="loadPage(event, 'promoters.php')">Manage Promoters</a></li>
+                <li><a href="referral_count.php" onclick="loadPage(event, 'referral_count.php')">Referral Count</a></li>
+                <li><a href="add_user.php" onclick="loadPage(event, 'add_user.php')">Add User</a></li>
+                <li><a href="users_list.php" onclick="loadPage(event, 'users_list.php')">Users List</a></li>
+                <li><a href="logout.php" onclick="loadPage(event, 'logout.php')">Log Out</a></li>
+            <?php endif; ?>
         </ul>
     </div>
 
