@@ -18,7 +18,7 @@ if (isset($_POST['submit'])) {
         $promoter_id = mysqli_insert_id($con);
 
         // Generate the referral link
-        $referral_link = "146.161.103.109/referral/link.php?promoter_id=$promoter_id";
+        $referral_link = "197.156.64.162/:9393//referral/link.php?promoter_id=$promoter_id";
 
         // Properly escape JavaScript and handle inline HTML
         echo "<script>
