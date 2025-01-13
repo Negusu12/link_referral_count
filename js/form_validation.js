@@ -3,11 +3,9 @@ function validateForm() {
   const middleName = document.getElementById("middle_name").value.trim();
   const lastName = document.getElementById("last_name").value.trim();
   const phone = document.getElementById("phone").value.trim();
-  const email = document.getElementById("email").value.trim();
 
   // Regex for phone number and email validation
   const phoneRegex = /^[0-9]{10}$/; // Validates a 10-digit phone number
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!firstName) {
     Swal.fire("Validation Error", "First name is required!", "error");
@@ -33,20 +31,6 @@ function validateForm() {
     Swal.fire(
       "Validation Error",
       "Please enter a valid 10-digit phone number!",
-      "error"
-    );
-    return false;
-  }
-
-  if (!email) {
-    Swal.fire("Validation Error", "Email is required!", "error");
-    return false;
-  }
-
-  if (!emailRegex.test(email)) {
-    Swal.fire(
-      "Validation Error",
-      "Please enter a valid email address!",
       "error"
     );
     return false;
