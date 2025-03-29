@@ -1,6 +1,5 @@
 <?php
 include('connect.php');
-include('backend/functions.php');
 if (isset($_POST['submit'])) {
     $first_name = addslashes($_POST['first_name']);
     $middle_name = addslashes($_POST['middle_name']);
@@ -18,7 +17,7 @@ if (isset($_POST['submit'])) {
         $promoter_id = mysqli_insert_id($con);
 
         // Generate the referral link
-        $referral_link = "197.156.64.162/:9393//referral/link.php?promoter_id=$promoter_id";
+        $referral_link = "kingtech.com.et//referral/link.php?promoter_id=$promoter_id";
 
         // Properly escape JavaScript and handle inline HTML
         echo "<script>

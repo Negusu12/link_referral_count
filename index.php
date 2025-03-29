@@ -3,122 +3,96 @@ session_start();
 include("connect.php");
 include("backend/functions.php");
 $user_data = check_login($con);
+
+// Get counts for dashboard
+$promoter_count = mysqli_fetch_assoc(mysqli_query($con, "SELECT COUNT(*) as count FROM promoter"))['count'];
+$user_count = mysqli_fetch_assoc(mysqli_query($con, "SELECT COUNT(*) as count FROM users"))['count'];
+$referral_count = mysqli_fetch_assoc(mysqli_query($con, "SELECT SUM(total_visit_count) as count FROM promoter_count"))['count'];
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar Navigation</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
+<?php include('header.php'); ?>
 
-        /* Sidebar Styles */
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: #fff;
-            padding: 15px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            height: 100%;
-        }
-
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            margin: 15px 0;
-        }
-
-        .sidebar ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            display: block;
-            padding: 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-
-        .sidebar ul li a:hover {
-            background-color: #34495e;
-        }
-
-        /* Main Content Styles */
-        .main-content {
-            margin-left: 250px;
-            flex-grow: 1;
-            padding: 20px;
-            background-color: #ecf0f1;
-            overflow-y: auto;
-        }
-
-        iframe {
-            width: 100%;
-            height: calc(100vh - 40px);
-            border: none;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="sidebar">
-        <h2>Navigation</h2>
-        <ul>
-            <?php if (!in_array($user_data['role'], [1])) : ?>
-                <li><a href="add_promoter.php">Add Promoter</a></li>
-            <?php endif; ?>
-            <?php if (in_array($user_data['role'], [1])) : ?>
-                <li><a href="add_promoter.php" onclick="loadPage(event, 'add_promoter.php')">Add Promoter</a></li>
-                <li><a href="promoters.php" onclick="loadPage(event, 'promoters.php')">Manage Promoters</a></li>
-                <li><a href="referral_count.php" onclick="loadPage(event, 'referral_count.php')">Referral Count</a></li>
-                <li><a href="add_user.php" onclick="loadPage(event, 'add_user.php')">Add User</a></li>
-                <li><a href="users_list.php" onclick="loadPage(event, 'users_list.php')">Users List</a></li>
-                <li><a href="logout.php" onclick="loadPage(event, 'logout.php')">Log Out</a></li>
-            <?php endif; ?>
-        </ul>
+<div class="container-fluid">
+    <div class="header-title">
+        <h1>Dashboard</h1>
     </div>
 
-    <div class="main-content">
-        <!-- Set iframe src to the default saved page or blank -->
-        <iframe id="content-frame"></iframe>
+    <div class="dashboard-cards">
+        <div class="card">
+            <div class="card-icon">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <h3 class="card-title">Total Promoters</h3>
+            <h2 class="card-value"><?= $promoter_count ?></h2>
+            <a href="promoters.php" class="btn btn-primary mt-2">View All</a>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3 class="card-title">System Users</h3>
+            <h2 class="card-value"><?= $user_count ?></h2>
+            <a href="users_list.php" class="btn btn-primary mt-2">Manage Users</a>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="card-title">Total Referrals</h3>
+            <h2 class="card-value"><?= $referral_count ?></h2>
+            <a href="referral_count.php" class="btn btn-primary mt-2">View Report</a>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <h3 class="card-title">Quick Actions</h3>
+            <div class="d-flex flex-column">
+                <a href="add_promoter.php" class="btn btn-success mb-2">Add Promoter</a>
+                <a href="add_user.php" class="btn btn-warning">Add User</a>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Function to load page in iframe and store the page in localStorage
-        function loadPage(event, page) {
-            event.preventDefault(); // Prevent default link behavior
-            document.getElementById('content-frame').src = page; // Load page in iframe
-            localStorage.setItem('currentPage', page); // Save the current page to localStorage
-        }
+    <div class="container-fluid">
+        <h3 class="mb-3">Recent Promoters</h3>
+        <div class="table-responsive">
+            <?php
+            $result = mysqli_query($con, "SELECT * FROM promoter ORDER BY promoter_id DESC LIMIT 5");
+            if (mysqli_num_rows($result) > 0):
+            ?>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                            <tr>
+                                <td><?= $row['promoter_id'] ?></td>
+                                <td><?= $row['first_name'] . ' ' . $row['last_name'] ?></td>
+                                <td><?= $row['email'] ?></td>
+                                <td><?= $row['phone'] ?></td>
+                                <td>
+                                    <a href="backend/edit.php?promoter_id=<?= $row['promoter_id'] ?>" class="btn btn-sm btn-success">Edit</a>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div class="alert alert-info">No promoters found.</div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
 
-        // Load the last page from localStorage on page refresh
-        window.onload = function() {
-            const savedPage = localStorage.getItem('currentPage'); // Get the last loaded page from localStorage
-            const iframe = document.getElementById('content-frame');
-            if (savedPage) {
-                iframe.src = savedPage; // Load the saved page in iframe
-            } else {
-                iframe.src = 'referral_count.php'; // Default page (optional)
-            }
-        };
-    </script>
-</body>
-
-</html>
+<?php include('footer.php'); ?>

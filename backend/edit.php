@@ -1,8 +1,7 @@
 <?php
-
 include "../connect.php";
 
-$promoter_id = $full_name = $remark = "";
+$promoter_id = $first_name = $middle_name = $last_name = $email = $phone = "";
 $error = $success = "";
 
 if ($_SERVER["REQUEST_METHOD"] == 'GET') {
@@ -13,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
   $promoter_id = $_GET['promoter_id'];
   $sql = "SELECT * FROM promoter WHERE promoter_id=?";
   $stmt = $con->prepare($sql);
-  $stmt->bind_param('i', $promoter_id); // Fix: Add binding for promoter_id
+  $stmt->bind_param('i', $promoter_id);
   if (!$stmt->execute()) {
     $error = "Error: " . $stmt->error;
   } else {
@@ -38,176 +37,125 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
   $email = $_POST["email"];
   $phone = $_POST["phone"];
 
-
-
   if (empty($error)) {
     $sql = "UPDATE promoter SET first_name=?, middle_name=?, last_name=?, email=?, phone=? WHERE promoter_id=?";
     $stmt = $con->prepare($sql);
-    $stmt->bind_param('ssssss', $first_name, $middle_name,  $last_name, $email,  $phone, $promoter_id);
+    $stmt->bind_param('sssssi', $first_name, $middle_name, $last_name, $email, $phone, $promoter_id);
     if (!$stmt->execute()) {
       $error = "Error: " . $stmt->error;
     } else {
       echo "<script>
-        alert('User Updated Successfully');
-        window.location.href = '../promoters.php';
-      </script>";
+                window.onload = function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Promoter Updated Successfully',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                    }).then(function() {
+                        window.location.href = '../promoters.php';
+                    });
+                }
+            </script>";
     }
   }
 }
-
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
-  <title>Edit User</title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/png" href="assets/images/icons/favicon.ico" />
-
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #03949B;
-      margin: 0;
-      padding: 0;
-      color: #26225B;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      /* Adjusted margin for centering */
-      background-color: #FFFFFF;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h1 {
-      color: #26225B;
-      font-size: 28px;
-      /* Increased font size */
-      text-align: center;
-      /* Centered text */
-      margin-bottom: 20px;
-      /* Added margin */
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      color: #26225B;
-    }
-
-    input,
-    textarea,
-    select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #B2B435;
-      border-radius: 5px;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-      /* Added margin for spacing between form elements */
-    }
-
-    button {
-      background-color: #03949B;
-      color: #FFFFFF;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #4D7DBF;
-    }
-
-    .alert {
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 5px;
-    }
-
-    .alert-danger {
-      background-color: #FFD2D2;
-      border: 1px solid #FF5E5E;
-      color: #D8000C;
-    }
-
-    .alert-success {
-      background-color: #DFF2BF;
-      border: 1px solid #4F8A10;
-      color: #4F8A10;
-    }
-
-    .btn-back {
-      display: block;
-      text-align: right;
-      margin-bottom: 10px;
-      text-decoration: none;
-      color: #03949B;
-      font-weight: bold;
-    }
-
-    .btn-back:hover {
-      color: #4D7DBF;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promoter Management System</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bootstrap/bootstrap.css">
+  <link rel="stylesheet" href="../css/bootstrap/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../css/bootstrap/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="../css/bootstrap/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="../css/sweetalert2.min.css">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 
-<body>
-
-  <div class="limiter">
-    <div class="container-login100">
-      <div class="wrap-login100">
-
-        <div id="box" class="box container">
-          <a href="../promoters.php" class="btn-back">Back to Promoters</a>
-          <h1>Edit Promoters</h1>
-          <form method="post" enctype="multipart/form-data">
-            <input type="hidden" name="promoter_id" value="<?php echo $promoter_id; ?>">
-
-            <div class="form-group">
-              <label for="full_name">Full Name:</label>
-              <input class="input100" type="text" name="first_name" value="<?php echo $first_name ?>" required>
-            </div>
-            <div class="form-group">
-              <label for="full_name">Middle Name:</label>
-              <input class="input100" type="text" name="middle_name" value="<?php echo $middle_name ?>" required>
-            </div>
-            <div class="form-group">
-              <label for="full_name">Last Name:</label>
-              <input class="input100" type="text" name="last_name" value="<?php echo $last_name ?>" required>
-            </div>
-            <div class="form-group">
-              <label for="full_name">email:</label>
-              <input class="input100" type="text" name="email" value="<?php echo $email ?>" required>
-            </div>
-            <div class="form-group">
-              <label for="full_name">Phone:</label>
-              <input class="input100" type="text" name="phone" value="<?php echo $phone ?>" required>
-            </div>
-
-            <button type="submit">Update</button>
-            <?php if (!empty($error)) { ?>
-              <div class="alert alert-danger"><?php echo $error ?></div>
-            <?php } else if (!empty($success)) { ?>
-              <div class="alert alert-success"><?php echo $success ?></div>
-            <?php } ?>
-          </form>
-
-        </div>
-      </div>
+<div class="container-fluid">
+  <div class="main-block">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Edit Promoter</h1>
+      <a href="../promoters.php" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Promoters
+      </a>
     </div>
-  </div>
-</body>
 
-</html>
+    <form method="post" class="edit-form">
+      <input type="hidden" name="promoter_id" value="<?php echo $promoter_id; ?>">
+
+      <div class="form-group">
+        <label for="first_name">First Name</label>
+        <input type="text" class="form-control" name="first_name" value="<?php echo htmlspecialchars($first_name) ?>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="middle_name">Middle Name</label>
+        <input type="text" class="form-control" name="middle_name" value="<?php echo htmlspecialchars($middle_name) ?>">
+      </div>
+
+      <div class="form-group">
+        <label for="last_name">Last Name</label>
+        <input type="text" class="form-control" name="last_name" value="<?php echo htmlspecialchars($last_name) ?>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($email) ?>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" class="form-control" name="phone" value="<?php echo htmlspecialchars($phone) ?>" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">
+        <i class="fas fa-save"></i> Update Promoter
+      </button>
+
+      <?php if (!empty($error)): ?>
+        <div class="alert alert-danger mt-3"><?php echo htmlspecialchars($error) ?></div>
+      <?php endif; ?>
+    </form>
+  </div>
+</div>
+
+
+<script src="../js/jquery/jquery-3.3.1.min.js"></script>
+<script src="../js/jquery/jquery.dataTables.min.js"></script>
+<script src="../js/bootstrap/dataTables.bootstrap4.min.js"></script>
+<script src="../js/bootstrap/dataTables.buttons.min.js"></script>
+<script src="../js/bootstrap/buttons.bootstrap4.min.js"></script>
+<script src="../js/bootstrap/jszip.min.js"></script>
+<script src="../js/bootstrap/pdfmake.min.js"></script>
+<script src="../js/bootstrap/vfs_fonts.js"></script>
+<script src="../js/bootstrap/buttons.html5.min.js"></script>
+<script src="../js/bootstrap/buttons.print.min.js"></script>
+<script src="../js/bootstrap/buttons.colVis.min.js"></script>
+<script src="../js/bootstrap/dataTables.responsive.min.js"></script>
+<script src="../js/sweetalert2.min.js"></script>
+<script src="../js/form_validation.js"></script>
+
+<script>
+  $(document).ready(function() {
+    // Initialize all DataTables
+    $('.mydatatable').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        'copy', 'csv', 'excel', 'pdf', 'print', 'colvis'
+      ],
+      responsive: true,
+      pageLength: 25
+    });
+
+    // Active link highlighting
+    $('.nav-link').each(function() {
+      if (this.href === window.location.href) {
+        $(this).addClass('active');
+      }
+    });
+  });
+</script>
