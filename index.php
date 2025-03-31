@@ -65,7 +65,7 @@ $referral_count = mysqli_fetch_assoc(mysqli_query($con, "SELECT SUM(total_visit_
             if (mysqli_num_rows($result) > 0):
             ?>
                 <table class="table table-striped">
-                    <thead class="thead-dark">
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Name</th>

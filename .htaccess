@@ -1,4 +1,4 @@
-DirectoryIndex index.php
+DirectoryIndex add_promoter.php
 
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f

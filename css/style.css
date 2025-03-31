@@ -7,11 +7,11 @@
 }
 
 :root {
-  --primary-color: #3498db;
-  --secondary-color: #2980b9;
+  --primary-color: #076e56;
+  --secondary-color: #ffff01;
   --accent-color: #e74c3c;
   --light-color: #ecf0f1;
-  --dark-color: #2c3e50;
+  --dark-color: #076e56;
   --success-color: #2ecc71;
   --warning-color: #f39c12;
   --danger-color: #e74c3c;

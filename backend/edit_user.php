@@ -1,13 +1,91 @@
 <?php
-include "../connect.php";
+session_start();
+include("../connect.php");
+include("functions.php");
+$user_data = check_login($con);
 
 $id = $user_name = $password = "";
 $error = $success = "";
 
 if ($_SERVER["REQUEST_METHOD"] == 'GET') {
-    // [Keep your existing GET handling code...]
+    if (!isset($_GET['id'])) {
+        header('Location: users.php');
+        exit;
+    }
+
+    $id = $_GET['id'];
+    $sql = "SELECT id, user_name FROM users WHERE id=?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param('i', $id);
+
+    if (!$stmt->execute()) {
+        $error = "Error: " . $stmt->error;
+    } else {
+        $stmt->store_result();
+
+        if ($stmt->num_rows == 0) {
+            header('Location: users.php');
+            exit;
+        }
+
+        $stmt->bind_result($id, $user_name);
+        $stmt->fetch();
+    }
+    $stmt->close();
 } else {
-    // [Keep your existing POST handling code...]
+    $id = $_POST["id"];
+    $user_name = $_POST["user_name"];
+    $password = $_POST["password"];
+
+    // Check if the password is empty
+    if (empty($password)) {
+        // Retrieve the old hashed password from the database
+        $sqlOldPassword = "SELECT password FROM users WHERE id=?";
+        $stmtOldPassword = $con->prepare($sqlOldPassword);
+        $stmtOldPassword->bind_param('i', $id);
+        if (!$stmtOldPassword->execute()) {
+            $error = "Error: " . $stmtOldPassword->error;
+        } else {
+            $stmtOldPassword->store_result();
+
+            if ($stmtOldPassword->num_rows == 0) {
+                $error = "Error: User not found";
+            } else {
+                $stmtOldPassword->bind_result($old_password);
+                $stmtOldPassword->fetch();
+            }
+        }
+        $stmtOldPassword->close();
+
+        // Use the old password if the new password is empty
+        $password = $old_password;
+    } else {
+        // Hash the new password if provided
+        $password = password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    if (empty($error)) {
+        $sql = "UPDATE users SET user_name=?, password=? WHERE id=?";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param('ssi', $user_name, $password, $id);
+
+        if (!$stmt->execute()) {
+            $error = "Error: " . $stmt->error;
+        } else {
+            echo "<script>
+        window.onload = function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'User Updated Successfully',
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+            }).then(function() {
+                window.location.href = '../users_list';
+            });
+        }
+    </script>";
+        }
+    }
 }
 ?>
 
@@ -39,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'GET') {
 
             <div class="form-group">
                 <label for="user_name">Username</label>
-                <input type="text" class="form-control" name="user_name" value="<?php echo htmlspecialchars($user_name) ?>" required>
+                <input type="text" name="user_name" class="form-control form-control-sm" value="<?php echo $user_name ?>" oninvalid="this.setCustomValidity('Enter User Name Here')" oninput="setCustomValidity('')" required readonly>
             </div>
 
             <div class="form-group">

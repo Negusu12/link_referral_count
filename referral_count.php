@@ -20,7 +20,7 @@ $user_data = check_login($con);
 
             <div class="table-responsive">
                 <table class="table table-striped table-bordered mydatatable" id="mydatatable">
-                    <thead class="thead-dark">
+                    <thead>
                         <tr>
                             <th>#</th>
                             <th>Referral ID</th>

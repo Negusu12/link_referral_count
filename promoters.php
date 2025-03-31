@@ -35,7 +35,7 @@ $user_data = check_login($con);
 
             <div class="table-responsive">
                 <table class="table table-striped table-bordered mydatatable" id="mydatatable">
-                    <thead class="thead-dark">
+                    <thead>
                         <tr>
                             <th width="50px">Select</th>
                             <th>#</th>
@@ -53,7 +53,7 @@ $user_data = check_login($con);
                         $rowNumber = 1;
                         while ($row = mysqli_fetch_assoc($result)) {
                             echo "<tr>";
-                            echo "<td><input type='checkbox' class='delete-checkbox form-check-input' name='selected_records[]' value='" . $row['promoter_id'] . "'></td>";
+                            echo "<td><input type='checkbox' class='delete-checkbox' name='selected_records[]' value='" . $row['promoter_id'] . "'></td>";
                             echo "<td>" . $rowNumber . "</td>";
                             echo "<td>" . $row['promoter_id'] . "</td>";
                             echo "<td>" . $row['first_name'] . "</td>";
@@ -138,6 +138,7 @@ $user_data = check_login($con);
         }
     });
 </script>
+<script src="js/jquery/jquery-3.3.1.min.js"></script>
 <script>
     $(document).ready(function() {
         // Function to handle select all checkbox
