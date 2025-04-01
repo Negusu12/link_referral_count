@@ -16,22 +16,63 @@ if (isset($_POST['submit'])) {
         // Get the ID of the newly inserted promoter
         $promoter_id = mysqli_insert_id($con);
 
-        // Generate the referral link
-        $referral_link = "kingtech.com.et/link.php?promoter_id=$promoter_id";
+        // Generate the base referral link
+        $base_referral_link = "kingtech.com.et/link.php?promoter_id=$promoter_id";
 
         // Properly escape JavaScript and handle inline HTML
-        echo "<script>
+        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        <script>
         window.onload = function() {
+            // Enhanced fingerprint collection
+            function collectFingerprintData() {
+                const data = {
+                    screen: window.screen.width + 'x' + window.screen.height,
+                    cd: window.screen.colorDepth,
+                    tz: new Date().getTimezoneOffset(),
+                    pl: Array.from(navigator.plugins || []).map(p => p.name).join(','),
+                    ce: navigator.cookieEnabled ? '1' : '0',
+                    // Additional fingerprint data points
+                    lng: navigator.language || '',
+                    hc: window.devicePixelRatio || '',
+                    dt: new Date().getTimezoneOffset(),
+                    wgl: (function() {
+                        try {
+                            const canvas = document.createElement('canvas');
+                            return canvas.toDataURL();
+                        } catch(e) {
+                            return '';
+                        }
+                    })()
+                };
+                return data;
+            }
+
+            // Generate the complete referral link with fingerprint data
+            function generateReferralLink() {
+                const baseLink = '$base_referral_link';
+                const fingerprintData = collectFingerprintData();
+                const params = new URLSearchParams();
+                
+                for (const [key, value] of Object.entries(fingerprintData)) {
+                    if (value) params.append(key, value);
+                }
+                
+                return baseLink + (baseLink.includes('?') ? '&' : '?') + params.toString();
+            }
+
+            const completeReferralLink = generateReferralLink();
+
             Swal.fire({
                 icon: 'success',
                 title: 'Promoter Added Successfully',
                 html: 'Use the following link for referral:<br>' +
                       '<div style=\"margin-top: 10px;\">' +
-                      '<input type=\"text\" id=\"referralLink\" value=\"$referral_link\" readonly style=\"width: 100%; padding: 5px;\">' +
+                      '<input type=\"text\" id=\"referralLink\" value=\"' + completeReferralLink + '\" readonly style=\"width: 100%; padding: 5px;\">' +
                       '<button id=\"copyButton\" style=\"margin-top: 10px; padding: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer;\">Copy to Clipboard</button>' +
                       '</div>',
                 showConfirmButton: true,
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                width: '600px'
             }).then(function() {
                 // Redirect only after the user confirms
                 window.location.href = 'add_promoter.php';
@@ -42,13 +83,14 @@ if (isset($_POST['submit'])) {
                 if (event.target && event.target.id === 'copyButton') {
                     const linkInput = document.getElementById('referralLink');
                     linkInput.select();
-                    linkInput.setSelectionRange(0, 99999); // For mobile devices
+                    linkInput.setSelectionRange(0, 99999);
                     navigator.clipboard.writeText(linkInput.value)
                         .then(() => {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Copied!',
-                                text: 'The link has been copied to your clipboard.'
+                                text: 'The link has been copied to your clipboard.',
+                                timer: 2000
                             });
                         })
                         .catch(err => {
@@ -63,7 +105,8 @@ if (isset($_POST['submit'])) {
         }
         </script>";
     } else {
-        echo "<script>
+        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+        <script>
         window.onload = function() {
             Swal.fire({
                 icon: 'error',
@@ -75,6 +118,7 @@ if (isset($_POST['submit'])) {
         </script>";
     }
 }
+
 
 
 if (isset($_POST['submit_user'])) {

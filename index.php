@@ -64,7 +64,7 @@ $referral_count = mysqli_fetch_assoc(mysqli_query($con, "SELECT SUM(total_visit_
             $result = mysqli_query($con, "SELECT * FROM promoter ORDER BY promoter_id DESC LIMIT 5");
             if (mysqli_num_rows($result) > 0):
             ?>
-                <table class="table table-striped">
+                <table class="table table table-bordered">
                     <thead>
                         <tr>
                             <th>ID</th>

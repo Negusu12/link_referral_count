@@ -34,7 +34,7 @@ $user_data = check_login($con);
             </div>
 
             <div class="table-responsive">
-                <table class="table table-striped table-bordered mydatatable" id="mydatatable">
+                <table class="table table-bordered mydatatable" id="mydatatable">
                     <thead>
                         <tr>
                             <th width="50px">Select</th>
