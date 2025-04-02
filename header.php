@@ -13,7 +13,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promoter Management System</title>
+    <title>Referral Management System</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
@@ -26,8 +26,8 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
 <body>
     <nav class="navbar">
-        <a href="index.php" class="navbar-brand">
-            <i class="fas fa-users"></i> Promoter System
+        <a href="index" class="navbar-brand" style="text-decoration: none; color: inherit; font-weight: inherit; font-size: inherit; font-family: inherit;">
+            <i class="fas fa-users"></i> &nbsp;&nbsp;&nbsp;Referral Management System
         </a>
 
         <?php if ($isLoggedIn): ?>

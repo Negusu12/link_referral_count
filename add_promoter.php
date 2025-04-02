@@ -7,7 +7,7 @@ include('backend/insert.php');
 <div class="container-fluid">
     <div class="main-block">
         <form id="promoterForm" method="post" onsubmit="return validateForm()">
-            <h1>Add Promoter</h1>
+            <h1>Promoter Registration</h1>
             <div class="info">
                 <div class="form-group">
                     <label for="first_name">First Name</label>

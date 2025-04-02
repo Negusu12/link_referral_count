@@ -62,7 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="login-card">
             <div class="logo">
                 <i class="fas fa-users fa-3x"></i>
-                <h2>Promoter System</h2>
+                <a href="add_promoter" class="navbar-brand" style="text-decoration: none; color: inherit; font-weight: inherit; font-size: inherit; font-family: inherit; padding-left:15%">
+                    <h2>Promoter System</h2>
+                </a>
             </div>
 
             <form method="post" class="login-form">
