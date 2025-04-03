@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 <head>
     <title>Login - Promoter System</title>
+    <link rel="shortcut icon" type="image/icon" href="images/logo.png" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/sweetalert2.min.css">
