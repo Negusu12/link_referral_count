@@ -1,5 +1,17 @@
 <?php
 include('connect.php');
+
+function generateShortCode($length = 8)
+{
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $code = '';
+    for ($i = 0; $i < $length; $i++) {
+        $code .= $characters[rand(0, strlen($characters) - 1)];
+    }
+    return $code;
+}
+
+
 if (isset($_POST['submit'])) {
     $first_name = addslashes($_POST['first_name']);
     $middle_name = addslashes($_POST['middle_name']);
@@ -7,118 +19,107 @@ if (isset($_POST['submit'])) {
     $phone = addslashes($_POST['phone']);
     $email = addslashes($_POST['email']);
 
-    // Insert the new promoter into the database
-    $sql = "INSERT INTO promoter(first_name, middle_name, last_name, phone, email) 
+    // Insert promoter
+    $sql = "INSERT INTO promoter (first_name, middle_name, last_name, phone, email) 
             VALUES ('$first_name', '$middle_name', '$last_name', '$phone', '$email')";
     $result = mysqli_query($con, $sql);
 
     if ($result) {
-        // Get the ID of the newly inserted promoter
         $promoter_id = mysqli_insert_id($con);
+        $short_code = generateShortCode();
 
-        // Generate the base referral link
-        $base_referral_link = "kingtech.com.et/link.php?promoter_id=$promoter_id";
+        // Generate referral link
+        $referral_link = "https://kingtech.com.et/link.php?code=$short_code";
 
-        // Properly escape JavaScript and handle inline HTML
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        <script>
-        window.onload = function() {
-            // Enhanced fingerprint collection
-            function collectFingerprintData() {
-                const data = {
-                    screen: window.screen.width + 'x' + window.screen.height,
-                    cd: window.screen.colorDepth,
-                    tz: new Date().getTimezoneOffset(),
-                    pl: Array.from(navigator.plugins || []).map(p => p.name).join(','),
-                    ce: navigator.cookieEnabled ? '1' : '0',
-                    // Additional fingerprint data points
-                    lng: navigator.language || '',
-                    hc: window.devicePixelRatio || '',
-                    dt: new Date().getTimezoneOffset(),
-                    wgl: (function() {
-                        try {
-                            const canvas = document.createElement('canvas');
-                            return canvas.toDataURL();
-                        } catch(e) {
-                            return '';
-                        }
-                    })()
-                };
-                return data;
-            }
+        // Save referral link in referral_count table
+        $insertReferral = "INSERT INTO referral_count (promoter_id, short_code) 
+                           VALUES ($promoter_id, '$short_code')";
+        mysqli_query($con, $insertReferral);
 
-            // Generate the complete referral link with fingerprint data
-            function generateReferralLink() {
-                const baseLink = '$base_referral_link';
-                const fingerprintData = collectFingerprintData();
-                const params = new URLSearchParams();
-                
-                for (const [key, value] of Object.entries(fingerprintData)) {
-                    if (value) params.append(key, value);
+        // Also update promoter table to store referral link
+        $updateLink = "UPDATE promoter SET referral_link = '$referral_link' WHERE promoter_id = $promoter_id";
+        mysqli_query($con, $updateLink);
+?>
+        <!DOCTYPE html>
+        <html>
+
+        <head>
+            <title>Promoter Added</title>
+            <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            <style>
+                @media (max-width: 768px) {
+                    .responsive-swal {
+                        width: 90% !important;
+                        font-size: 14px;
+                    }
+
+                    #referralLink {
+                        font-size: 12px;
+                    }
+
+                    #copyButton {
+                        padding: 6px !important;
+                        font-size: 12px;
+                    }
                 }
-                
-                return baseLink + (baseLink.includes('?') ? '&' : '?') + params.toString();
-            }
+            </style>
+        </head>
 
-            const completeReferralLink = generateReferralLink();
+        <body>
+            <script>
+                window.onload = function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Promoter Added Successfully',
+                        html: 'Use the following link for referral:<br>' +
+                            '<div style="margin-top: 10px;">' +
+                            '<input type="text" id="referralLink" value="<?php echo $referral_link; ?>" readonly style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">' +
+                            '<button id="copyButton" style="margin-top: 10px; padding: 8px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">' +
+                            '📋 Copy to Clipboard</button></div>' +
+                            '<div style="margin-top: 15px; font-size: 14px; color: #666;">' +
+                            '🔐 This link has fraud prevention enabled.</div>',
+                        confirmButtonText: 'OK',
+                        width: '600px',
+                        customClass: {
+                            popup: 'responsive-swal'
+                        }
+                    }).then(function() {
+                        window.location.href = 'add_promoter.php';
+                    });
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Promoter Added Successfully',
-                html: 'Use the following link for referral:<br>' +
-                      '<div style=\"margin-top: 10px;\">' +
-                      '<input type=\"text\" id=\"referralLink\" value=\"' + completeReferralLink + '\" readonly style=\"width: 100%; padding: 5px;\">' +
-                      '<button id=\"copyButton\" style=\"margin-top: 10px; padding: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer;\">Copy to Clipboard</button>' +
-                      '</div>',
-                showConfirmButton: true,
-                confirmButtonText: 'OK',
-                width: '600px'
-            }).then(function() {
-                // Redirect only after the user confirms
-                window.location.href = 'add_promoter.php';
-            });
-
-            // Add event listener for the copy button
-            document.addEventListener('click', function(event) {
-                if (event.target && event.target.id === 'copyButton') {
-                    const linkInput = document.getElementById('referralLink');
-                    linkInput.select();
-                    linkInput.setSelectionRange(0, 99999);
-                    navigator.clipboard.writeText(linkInput.value)
-                        .then(() => {
+                    document.addEventListener('click', function(event) {
+                        if (event.target && event.target.id === 'copyButton') {
+                            const linkInput = document.getElementById('referralLink');
+                            linkInput.select();
+                            document.execCommand("copy");
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Copied!',
-                                text: 'The link has been copied to your clipboard.',
-                                timer: 2000
+                                text: 'Link copied to clipboard.',
+                                timer: 2000,
+                                toast: true,
+                                position: 'top-end'
                             });
-                        })
-                        .catch(err => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: 'Unable to copy the link.'
-                            });
-                        });
-                }
-            });
-        }
-        </script>";
+                        }
+                    });
+                };
+            </script>
+        </body>
+
+        </html>
+<?php
     } else {
-        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
-        <script>
-        window.onload = function() {
+        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
+        echo "<script>
             Swal.fire({
                 icon: 'error',
-                title: 'Something went wrong. Make sure all fields are inserted correctly.',
-                showConfirmButton: true,
+                title: 'Insert Error!',
+                text: 'Please fill all fields correctly.',
                 confirmButtonText: 'OK'
             });
-        }
         </script>";
     }
 }
-
 
 
 if (isset($_POST['submit_user'])) {
@@ -130,7 +131,7 @@ if (isset($_POST['submit_user'])) {
         $user_id = random_num(20);
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $query = "INSERT INTO users (user_id, user_name, password, role)
-                  VALUES ('$user_id', '$user_name', '$hashed_password', '$role')";
+VALUES ('$user_id', '$user_name', '$hashed_password', '$role')";
         $result = mysqli_query($con, $query);
 
         if ($result) {
@@ -143,34 +144,34 @@ if (isset($_POST['submit_user'])) {
             exit();
         } else {
             echo "<script>
-                window.onload = function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Please enter valid information!',
-                        showConfirmButton: false,
-                        showDenyButton: true,
-                        denyButtonText: 'OK'
-                    });
-                }
-             </script>";
+    window.onload = function() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Please enter valid information!',
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: 'OK'
+        });
+    }
+</script>";
         }
     }
 }
 
 // Check for success message in the session
-session_start();
+
 if (isset($_SESSION['success']) && $_SESSION['success']) {
     echo "<script>
-        window.onload = function() {
-            Swal.fire({
-                icon: 'success',
-                title: 'User has been Registered Successfully',
-                showConfirmButton: true,
-                confirmButtonText: 'OK',
-                timer: 2000
-            });
-        }
-     </script>";
+    window.onload = function() {
+        Swal.fire({
+            icon: 'success',
+            title: 'User has been Registered Successfully',
+            showConfirmButton: true,
+            confirmButtonText: 'OK',
+            timer: 2000
+        });
+    }
+</script>";
     // Unset the success flag
     unset($_SESSION['success']);
 }

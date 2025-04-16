@@ -45,6 +45,7 @@ $user_data = check_login($con);
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Referral Link</th>
                             <th width="200px">Actions</th>
                         </tr>
                     </thead>
@@ -61,10 +62,8 @@ $user_data = check_login($con);
                             echo "<td>" . $row['last_name'] . "</td>";
                             echo "<td>" . $row['email'] . "</td>";
                             echo "<td>" . $row['phone'] . "</td>";
+                            echo "<td>" . $row['referral_link'] . "</td>";
                             echo "<td>
-                                <button class='btn btn-sm btn-info regenerate-link' data-promoter-id='" . $row['promoter_id'] . "'>
-                                    <i class='fas fa-link'></i> Regenerate Link
-                                </button>
                                 <a class='btn btn-sm btn-success' href='backend/edit.php?promoter_id=" . $row['promoter_id'] . "'>
                                     <i class='fas fa-edit'></i>
                                 </a>
@@ -139,70 +138,6 @@ $user_data = check_login($con);
         } else {
             Swal.fire('No Selection', 'Please select at least one record to delete.', 'info');
         }
-    });
-
-    // Regenerate Link functionality
-    document.querySelectorAll('.regenerate-link').forEach(button => {
-        button.addEventListener('click', function() {
-            const promoterId = this.getAttribute('data-promoter-id');
-
-            // Collect fingerprint data
-            const fingerprintData = {
-                screen: window.screen.width + 'x' + window.screen.height,
-                cd: window.screen.colorDepth,
-                tz: new Date().getTimezoneOffset(),
-                pl: Array.from(navigator.plugins || []).map(p => p.name).join(','),
-                ce: navigator.cookieEnabled ? '1' : '0',
-                lng: navigator.language || '',
-                hc: window.devicePixelRatio || '',
-                wgl: (function() {
-                    try {
-                        const canvas = document.createElement('canvas');
-                        return canvas.toDataURL();
-                    } catch (e) {
-                        return '';
-                    }
-                })()
-            };
-
-            // Generate referral link
-            const baseLink = window.location.origin + '/link.php?promoter_id=' + promoterId;
-            const params = new URLSearchParams();
-
-            for (const [key, value] of Object.entries(fingerprintData)) {
-                if (value) params.append(key, value);
-            }
-
-            const referralLink = baseLink + '&' + params.toString();
-
-            // Display the link in SweetAlert
-            Swal.fire({
-                title: 'Referral Link Regenerated',
-                html: `Here is the referral link for promoter ID ${promoterId}:<br><br>
-                      <input type="text" id="regeneratedLink" value="${referralLink}" 
-                      style="width: 100%; padding: 8px; margin-bottom: 10px;" readonly>
-                      <button id="copyRegeneratedLink" class="btn btn-primary" 
-                      style="width: 100%; padding: 8px;">
-                          Copy to Clipboard
-                      </button>`,
-                showConfirmButton: false,
-                width: '600px'
-            });
-
-            // Add copy functionality
-            document.getElementById('copyRegeneratedLink').addEventListener('click', function() {
-                const linkInput = document.getElementById('regeneratedLink');
-                linkInput.select();
-                document.execCommand('copy');
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Copied!',
-                    text: 'The link has been copied to your clipboard.',
-                    timer: 2000
-                });
-            });
-        });
     });
 </script>
 

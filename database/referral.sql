@@ -29,8 +29,9 @@ CREATE TABLE `promoter` (
   `last_name` varchar(100) NOT NULL,
   `phone` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
+  `referral_link` text,
   PRIMARY KEY (`promoter_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,17 +62,33 @@ DROP TABLE IF EXISTS `referral_count`;
 CREATE TABLE `referral_count` (
   `id` int NOT NULL AUTO_INCREMENT,
   `promoter_id` int DEFAULT NULL,
+  `short_code` varchar(10) DEFAULT NULL,
   `visit_count` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `short_code` (`short_code`),
+  KEY `promoter_id` (`promoter_id`),
+  CONSTRAINT `referral_count_ibfk_1` FOREIGN KEY (`promoter_id`) REFERENCES `promoter` (`promoter_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `referral_logs`
+--
+
+DROP TABLE IF EXISTS `referral_logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `referral_logs` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `promoter_id` int DEFAULT NULL,
   `ip_address` varchar(255) DEFAULT NULL,
   `fingerprint` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_referral` (`promoter_id`,`ip_address`,`fingerprint`),
-  UNIQUE KEY `unique_promoter_ip` (`promoter_id`,`ip_address`),
-  UNIQUE KEY `unique_promoter_fingerprint` (`promoter_id`,`fingerprint`),
-  KEY `promoter_id` (`promoter_id`),
-  CONSTRAINT `referral_count_ibfk_1` FOREIGN KEY (`promoter_id`) REFERENCES `promoter` (`promoter_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `promoter_id` (`promoter_id`,`ip_address`,`fingerprint`),
+  CONSTRAINT `referral_logs_ibfk_1` FOREIGN KEY (`promoter_id`) REFERENCES `promoter` (`promoter_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,7 +106,7 @@ CREATE TABLE `users` (
   `date` timestamp NULL DEFAULT NULL,
   `role` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -119,4 +136,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-16  4:11:11
+-- Dump completed on 2025-04-16  9:38:33
