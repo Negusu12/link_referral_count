@@ -30,17 +30,8 @@ CREATE TABLE `promoter` (
   `phone` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`promoter_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promoter`
---
-
-LOCK TABLES `promoter` WRITE;
-/*!40000 ALTER TABLE `promoter` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promoter` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Temporary view structure for view `promoter_count`
@@ -80,17 +71,8 @@ CREATE TABLE `referral_count` (
   UNIQUE KEY `unique_promoter_fingerprint` (`promoter_id`,`fingerprint`),
   KEY `promoter_id` (`promoter_id`),
   CONSTRAINT `referral_count_ibfk_1` FOREIGN KEY (`promoter_id`) REFERENCES `promoter` (`promoter_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `referral_count`
---
-
-LOCK TABLES `referral_count` WRITE;
-/*!40000 ALTER TABLE `referral_count` DISABLE KEYS */;
-/*!40000 ALTER TABLE `referral_count` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -109,16 +91,6 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,77197383,'Negusu','$2y$10$MhFPYM9dPqtnEZS.6cijOebDxj48kstWXGGj2OlE2MJM6UCnyijl6',NULL,'1'),(4,179214487388922,'abebe','$2y$10$C.XpKvTjN8gz7W7TNa5z1ur6hPJcgotbupW5Dj5ddXkBYYTwZPPJy',NULL,'1'),(9,6730114,'kal','$2y$10$gzBABT5WWdUbmgORTBtXle2uj4NT6rqpEhpc.1ETfwbZ2c/WCyXu6',NULL,NULL);
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Final view structure for view `promoter_count`
@@ -147,4 +119,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-01  9:28:28
+-- Dump completed on 2025-04-16  4:11:11
