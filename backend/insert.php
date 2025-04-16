@@ -91,18 +91,25 @@ if (isset($_POST['submit'])) {
                             const linkInput = document.getElementById('referralLink');
                             linkInput.select();
                             document.execCommand("copy");
+
+                            // Show copied message and then redirect after short delay
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Copied!',
                                 text: 'Link copied to clipboard.',
-                                timer: 2000,
+                                timer: 1500,
                                 toast: true,
-                                position: 'top-end'
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                willClose: () => {
+                                    window.location.href = 'add_promoter.php';
+                                }
                             });
                         }
                     });
                 };
             </script>
+
         </body>
 
         </html>
