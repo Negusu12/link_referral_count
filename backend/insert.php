@@ -76,8 +76,7 @@ if (isset($_POST['submit'])) {
                             '<input type="text" id="referralLink" value="<?php echo $referral_link; ?>" readonly style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">' +
                             '<button id="copyButton" style="margin-top: 10px; padding: 8px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">' +
                             '📋 Copy to Clipboard</button></div>' +
-                            '<div style="margin-top: 15px; font-size: 14px; color: #666;">' +
-                            '🔐 This link has fraud prevention enabled.</div>',
+                            '<div style="margin-top: 15px; font-size: 14px; color: #666;"></div>',
                         confirmButtonText: 'OK',
                         width: '600px',
                         customClass: {

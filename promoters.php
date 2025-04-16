@@ -62,7 +62,13 @@ $user_data = check_login($con);
                             echo "<td>" . $row['last_name'] . "</td>";
                             echo "<td>" . $row['email'] . "</td>";
                             echo "<td>" . $row['phone'] . "</td>";
-                            echo "<td>" . $row['referral_link'] . "</td>";
+                            echo "<td>
+    <span id='referralLink_" . $row['promoter_id'] . "'>" . $row['referral_link'] . "</span>
+    <button class='btn btn-sm btn-outline-primary' onclick='copyReferralLink(" . $row['promoter_id'] . ")'>
+        <i class='fas fa-copy'></i> Copy
+    </button>
+</td>";
+
                             echo "<td>
                                 <a class='btn btn-sm btn-success' href='backend/edit.php?promoter_id=" . $row['promoter_id'] . "'>
                                     <i class='fas fa-edit'></i>
@@ -150,5 +156,18 @@ $user_data = check_login($con);
         });
     });
 </script>
+
+<script>
+    function copyReferralLink(promoterId) {
+        var text = document.getElementById("referralLink_" + promoterId).textContent;
+
+        navigator.clipboard.writeText(text).then(function() {
+            alert("Referral link copied to clipboard!");
+        }).catch(function(err) {
+            console.error("Failed to copy: ", err);
+        });
+    }
+</script>
+
 
 <?php include('footer.php'); ?>
